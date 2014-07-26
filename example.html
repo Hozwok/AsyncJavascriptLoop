@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>AsyncJavascript jQuery Plugin Test Page</title>
+	
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script type="text/javascript" src="asyncjsloop.min.js"></script>
+		
+		<script type="text/javascript">
+
+
+		$(function() {
+		
+			//Very simple example!!
+
+			// --------------------- Recursion Example ---------------------
+
+			$("#startRecursion").click(function() {
+				startRecursion();
+			});
+
+			function startRecursion() {
+
+				$("#startRecursion").attr("disabled", true);
+
+				$.RecursiveCall(function(param1) {
+						var def = new $.Deferred();
+
+						//Simulate the async with a timeout.
+						setTimeout(function() {
+						
+							$("#recursiveCallRes")
+								.append($("<p />").text(param1));
+
+							def.resolve(param1 + " processed!");
+
+						}, 500);
+
+						return def.promise();
+					}, 
+					[[0],[1],[5]])
+					.always(function (res) {
+						$("#startRecursion").removeAttr("disabled");
+						$("#recursiveCallRes")
+								.append($("<p />").text(JSON.stringify(res)));
+
+					});
+
+			}
+
+			// -------------------------------------------------------------
+			// ------------------------ Loop Example -----------------------
+
+
+			var asyncDiv = $("#loopRes");
+			var count = 0;
+			
+			$("#startLoop").click(function() {
+				startLoop();
+			});
+
+			function startLoop() {
+
+				$.AsyncLoop(function mioloop() {
+					var def = new $.Deferred();
+
+					setTimeout(function() {
+
+						++count;
+
+						asyncDiv.append(" - " + count);
+						
+						var stop = Math.floor(Math.random()*101) > 99; // 1% probability to stop.
+
+						if (stop) {
+							def.reject(count);
+						} else {
+							def.resolve(count);
+						}
+
+					}, 100);
+
+					return def.promise();
+				})
+				.done(function(res) {
+					asyncDiv.append(" - Ended with number: " + count + "; ");
+				});
+	
+			}
+			
+
+
+
+			// -------------------------------------------------------------
+
+
+
+		});
+
+
+		</script>
+	</head>
+
+	<body>
+
+		Discover the exaple by browsing the source code of this page!<br />
+		
+		<input type="button" id="startRecursion" value="Start Recursive Call"></button>
+		<div id="recursiveCallRes" style="height: 130px; ">
+
+		</div>
+
+		<hr />
+		
+		<input type="button" id="startLoop" value="Start Loop"></button>
+		<div id="loopRes" style="height: 120px; width: 500px; display:block;">
+
+		</div>
+
+
+
+
+	</body>
+	</html>
