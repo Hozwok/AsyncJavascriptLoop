@@ -18,19 +18,18 @@ As second parameter, in the `RecursiveCall` method, you can pass the parameter w
 ```javascript
 //A recursive async call to sum number
 $.RecursiveCall(function(_firstNumber, _secondNumber) {
-		var def = new $.Deferred(); // (1) Instance new Deferred object-
-
-		//Simulate the async with a timeout.
-		setTimeout(function() {
-
-			var res = _firstNumber + _secondNumber;
-			def.resolve(res); // (3) Resolve it when your function ended. Here you can return a result.
-
-		}, 500);
-
-		return def.promise(); // (2) Return its promise 
+			var def = new $.Deferred(); // (1) Instance new Deferred object-
+	
+			//Simulate the async with a timeout.
+			setTimeout(function() {
+	
+				var res = _firstNumber + _secondNumber;
+				def.resolve(res); // (3) Resolve it when your function ended. Here you can return a result.
+	
+			}, 500);
+	
+			return def.promise(); // (2) Return its promise 
 		}, 
-
 		[[5,10],[3,7],[12,2]]) //You here can pass many parameter as you need
 	.always(function (results) { //The callback function (to call when your function ended and you have all results)
 		console.log("The sum results is (in order): ", results)
